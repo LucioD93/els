@@ -1,12 +1,12 @@
 all: els clean
 
-els: els.o functions.o header.h
+els: els.o functions.o functions.h
 	gcc -o els els.o functions.o
 
-els.o: els.c header.h
+els.o: els.c functions.h
 	gcc -c els.c
 
-functions.o: functions.c header.h
+functions.o: functions.c functions.h
 	gcc -c functions.c
 
 clean:
