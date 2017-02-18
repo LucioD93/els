@@ -6,20 +6,32 @@ int main(int argc, char const *argv[]) {
   // Se previene la interrupcion CTRL+C
   signal(SIGINT, sigintHandler);
 
+  char * name;
   int mainPid = getpid();
+
   char *cp;
   char cwd[BUFSIZ];
+
   if(!(cp = getcwd(cwd, BUFSIZ))) {
     printf("Error obteniendo directorio actual\n");
     exit(1);
   }
-  addSlash(cwd);
-  printf("CWD: %s\n", cwd);
-  printf("Pid: %d\n", mainPid);
-  struct stat cwdStat;
-  if(stat(cwd, &cwdStat)) {
-    printf("Error para abrir el directorio actual\n");
+
+  name = filename(cwd, argv[1]); 
+  FILE * fp;
+  if ((fp = fopen(name,"w"))== NULL){
+    printf("Error!\n");
     exit(1);
   }
-  printPermissions(cwdStat);
+
+  addSlash(cwd);
+  fprintf(fp,"CWD: %s\n", cwd);
+  fprintf(fp,"Pid: %d\n", mainPid);
+  struct stat cwdStat;
+
+  if(stat(cwd, &cwdStat)) {
+    fprintf(fp,"Error para abrir el directorio actual\n");
+    exit(1);
+  }
+  printPermissions(cwdStat,fp);
 }
