@@ -1,4 +1,13 @@
-#include "header.h"
+#include "functions.h"
+
+// Indica la forma correcta de usar el programa
+ void verificarArgumentos(int cantidad){
+    if (cantidad != 2){
+        printf("Violacion de parametros, pruebe: \n");
+        printf("./els <outpufile> \n");
+        exit(1);
+    }
+}
 
 // Manejador de señales para evitar el cierre del programa
 void sigintHandler(int sig_num)

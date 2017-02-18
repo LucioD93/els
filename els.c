@@ -1,7 +1,11 @@
-#include "header.h"
+#include "functions.h"
 
 int main(int argc, char const *argv[]) {
+  // Se verifica que se dio el nombre del archivo destino
+  verificarArgumentos(argc);
+  // Se previene la interrupcion CTRL+C
   signal(SIGINT, sigintHandler);
+
   int mainPid = getpid();
   char *cp;
   char cwd[BUFSIZ];
