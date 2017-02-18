@@ -71,6 +71,4 @@ void printPermissions(struct stat fileStat, FILE * fp) {
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
       //printf("Number of links %ld", (long)fileStat.st_nlink);
-      
-      fprintf(fp,"\n\n");
 }
