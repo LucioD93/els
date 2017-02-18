@@ -39,10 +39,13 @@ char * currentDir(const char * fullpath){
 // Asigna el nombre del archivo a crear
 char * filename(const char * path, const char * name){
   char * rt;
+  char * n;
   rt = currentDir(path);
-  strcat(rt,"_");
-  strcat(rt,name);
-  return rt;
+  n = (char *)malloc( strlen(name)+strlen(rt)+1);
+  strcpy(n,name);  
+  strcat(n,"_");
+  strcat(n,rt);
+  return n;
 }
 
 // Funcion para agregar un slash al final de un string

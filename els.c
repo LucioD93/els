@@ -18,6 +18,7 @@ int main(int argc, char const *argv[]) {
   }
 
   name = filename(cwd, argv[1]); 
+  
   FILE * fp;
   if ((fp = fopen(name,"w"))== NULL){
     printf("Error!\n");
