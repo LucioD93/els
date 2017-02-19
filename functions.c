@@ -59,21 +59,24 @@ void addSlash(char * address) {
 // Funcion para imprimir los permisos de un stat
 void printPermissions(struct stat fileStat, FILE * fp) {
   //printf("File Permissions: \t");
-      fprintf(fp, (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IRUSR) ? "r" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IWUSR) ? "w" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IXUSR) ? "x" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IRGRP) ? "r" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IWGRP) ? "w" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IXGRP) ? "x" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IROTH) ? "r" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IWOTH) ? "w" : "-");
-      fprintf(fp, (fileStat.st_mode & S_IXOTH) ? "x" : "-");
-      fprintf(fp," %-8d", fileStat.st_uid);
-      fprintf(fp,"%-8d", fileStat.st_gid);
-      fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
-      fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
-      //printf("Number of links %ld", (long)fileStat.st_nlink);
-      
-      fprintf(fp,"\n\n");
+  fprintf(fp, (S_ISDIR(fileStat.st_mode)) ? "d" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IRUSR) ? "r" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IWUSR) ? "w" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IXUSR) ? "x" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IRGRP) ? "r" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IWGRP) ? "w" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IXGRP) ? "x" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IROTH) ? "r" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IWOTH) ? "w" : "-");
+  fprintf(fp, (fileStat.st_mode & S_IXOTH) ? "x" : "-");
+  // User id
+  fprintf(fp," %-8d", fileStat.st_uid);
+  // Group id
+  fprintf(fp,"%-8d", fileStat.st_gid);
+  // tiempos
+  fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
+  fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
+  //printf("Number of links %ld", (long)fileStat.st_nlink);
+
+  fprintf(fp,"\n\n");
 }

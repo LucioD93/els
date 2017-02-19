@@ -26,8 +26,8 @@ int main(int argc, char const *argv[]) {
   }
 
   addSlash(cwd);
-  fprintf(fp,"CWD: %s\n", cwd);
-  fprintf(fp,"Pid: %d\n", mainPid);
+  fprintf(fp,"%s ", cwd);
+  //fprintf(fp,"Pid: %d\n", mainPid);
   struct stat cwdStat;
 
   if(stat(cwd, &cwdStat)) {
