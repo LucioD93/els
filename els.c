@@ -26,7 +26,7 @@ int main(int argc, char const *argv[]) {
   DIR *dir;
   struct dirent *ep;
   dir = opendir(cwd);
-  if (dir != NULL) {
+  if (dir) {
     while ((ep = readdir(dir))) {
       if (isDirectory(ep -> d_name)) {
         if ((directories[counter] = (char*) malloc(sizeof(char)*strlen(ep->d_name))) == NULL){
@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]) {
   for (int i = 0; i < directorieCount; i++) {
     if ((childsPids[i] = fork()) == 0) {
       printf("Hola soy %d hijo de %d\n", getpid(), getppid());
-      processDirectory(directories[i]);
+      processDirectory(directories[i], name);
       exit(0);
     } else if (childsPids[i] < 0) {
       printf("Error! No se pudo crear proceso\n");
