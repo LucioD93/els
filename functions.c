@@ -36,15 +36,6 @@ char * currentDir(const char * fullpath){
   return dir;
 }
 
-// Asigna el nombre del archivo a crear
-char * filename(const char * path, const char * name){
-  char * rt;
-  rt = currentDir(path);
-  strcat(rt,"_");
-  strcat(rt,name);
-  return rt;
-}
-
 // Funcion para agregar un slash al final de un string
 void addSlash(char * address) {
   char last = address[strlen(address)-1];
@@ -71,4 +62,42 @@ void printPermissions(struct stat fileStat, FILE * fp) {
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
       //printf("Number of links %ld", (long)fileStat.st_nlink);
+}
+
+// Funcion para determinar si un path es un directorio,
+// retorna 0 si lo es, 1 si no lo es
+int isDirectory(char* path) {
+  if (path[0] == '.') {
+    return 0;
+  }
+  struct stat statbuffer;
+  if (stat(path, &statbuffer) != 0) {
+      printf("Error! No se ha podido aplicar stat a %s\n", path);
+      exit(1);
+  }
+  return S_ISDIR(statbuffer.st_mode);
+}
+
+int countDirectories(char* path) {
+  int counter = 0;
+  DIR *dir;
+  struct dirent *ep;
+  dir = opendir(path);
+  if (dir != NULL) {
+    while ((ep = readdir(dir))) {
+      if (isDirectory(ep -> d_name)) {
+        counter += 1;
+      }
+    }
+    (void) closedir(dir);
+  } else {
+    printf("Error! No se ha podido abrir directorio\n");
+    exit(1);
+  }
+  return counter;
+
+}
+
+void processDirectory(char* path) {
+  printf("Hola, soy el proceso %d hijo de %d ", getpid(), getppid());
 }

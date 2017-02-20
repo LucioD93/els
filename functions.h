@@ -9,13 +9,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <dirent.h>
 #include <time.h>
 
 void verificarArgumentos(int);
 void sigintHandler(int);
 char * currentDir(const char *);
-char * filename(const char * , const char * );
 void addSlash(char *);
 void printPermissions(struct stat, FILE *);
+int isDirectory(char*);
+int countDirectories(char*);
 
 #endif

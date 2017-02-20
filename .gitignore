@@ -37,7 +37,7 @@
 els
 
 # Example folders
-dir1/
-dir2/
+dir*/
 
-# *.pdf
+#
+*.pdf
