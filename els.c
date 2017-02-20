@@ -42,15 +42,29 @@ int main(int argc, char const *argv[]) {
     printf("Error! No se ha podido abrir directorio\n");
     exit(1);
   }
-  for (int i = 0; i < directorieCount; i++) {
-    printf("Directorio: %s |%d|\n", directories[i], i);
-  }
 
   name = (char*)argv[1];
   FILE * fp;
   if ((fp = fopen(name,"w"))== NULL){
     printf("Error! No se ha podido abrir archivo de salida\n");
     exit(1);
+  }
+
+  pid_t childsPids[directorieCount];
+
+  for (int i = 0; i < directorieCount; i++) {
+    if ((childsPids[i] = fork()) == 0) {
+      printf("Hola soy %d hijo de %d\n", getpid(), getppid());
+      processDirectory(directories[i]);
+      exit(0);
+    } else if (childsPids[i] < 0) {
+      printf("Error! No se pudo crear proceso\n");
+      exit(1);
+    }
+  }
+
+  for (int i = 0; i < directorieCount; i++) {
+    waitpid(childsPids[i], (int*)1, 0);
   }
 
   fprintf(fp,"CWD: %s\n", cwd);

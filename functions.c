@@ -99,5 +99,5 @@ int countDirectories(char* path) {
 }
 
 void processDirectory(char* path) {
-  printf("Hola, soy el proceso %d hijo de %d ", getpid(), getppid());
+  printf("Soy %d y me toca %s\n", getpid(), path);
 }

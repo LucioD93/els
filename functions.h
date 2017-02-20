@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include <time.h>
 
@@ -19,5 +20,6 @@ void addSlash(char *);
 void printPermissions(struct stat, FILE *);
 int isDirectory(char*);
 int countDirectories(char*);
+void processDirectory(char*);
 
 #endif
