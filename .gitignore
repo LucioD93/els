@@ -35,3 +35,9 @@
 # Output files
 *.txt
 els
+
+# Example folders
+dir1/
+dir2/
+
+# *.pdf
