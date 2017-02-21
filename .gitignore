@@ -35,3 +35,10 @@
 # Output files
 *.txt
 els
+salida*
+
+# Example folders
+dir*/
+
+#
+*.pdf
