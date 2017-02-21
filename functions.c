@@ -100,33 +100,21 @@ int countDirectories(char* path) {
 }
 
 // Funcion para procesar un directorio contando sus archivos y bytes
-void processDirectory(char* path, char* outpufile, report report) {
+void processDirectory(char* path, FILE *fp, report report) {
   printf("Soy %d y me toca %s\n", getpid(), path);
-  FILE *fp;
-  strcat(outpufile, "-");
-  strcat(outpufile, path);
-  printf("Soy %d, archivo de salida: %s\n", getpid(), outpufile);
 
-  struct dirent *ep;
+  // struct dirent *ep;
   DIR *dir;
 
   dir = opendir(path);
   if (dir) {
-
     (void) closedir(dir);
   } else {
     printf("Error! No se ha podido abrir directorio\n");
-    exit(1);
-  }
-
-
-  if ((fp = fopen(outpufile,"w"))== NULL){
-    printf("Error! No se ha podido abrir archivo de salida\n");
     exit(1);
   }
   // Escribir en archivo de salida fp
   struct stat statBuffer;
   stat(path, &statBuffer);
   printPermissions(statBuffer, fp);
-  fclose(fp);
 }
