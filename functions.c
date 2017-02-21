@@ -36,15 +36,6 @@ char * currentDir(const char * fullpath){
   return dir;
 }
 
-// Asigna el nombre del archivo a crear
-char * filename(const char * path, const char * name){
-  char * rt;
-  rt = currentDir(path);
-  strcat(rt,"_");
-  strcat(rt,name);
-  return rt;
-}
-
 // Funcion para agregar un slash al final de un string
 void addSlash(char * address) {
   char last = address[strlen(address)-1];
@@ -71,6 +62,71 @@ void printPermissions(struct stat fileStat, FILE * fp) {
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
       fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
       //printf("Number of links %ld", (long)fileStat.st_nlink);
-      
-      fprintf(fp,"\n\n");
+}
+
+// Funcion para determinar si un path es un directorio,
+// retorna 0 si lo es, 1 si no lo es
+int isDirectory(char* path) {
+  if (path[0] == '.') {
+    return 0;
+  }
+  struct stat statbuffer;
+  if (stat(path, &statbuffer) != 0) {
+      printf("Error! No se ha podido aplicar stat a %s\n", path);
+      exit(1);
+  }
+  return S_ISDIR(statbuffer.st_mode);
+}
+
+// Funcion para contar los subdirectorios dentro de un directorio
+int countDirectories(char* path) {
+  int counter = 0;
+  DIR *dir;
+  struct dirent *ep;
+  dir = opendir(path);
+  if (dir != NULL) {
+    while ((ep = readdir(dir))) {
+      if (isDirectory(ep -> d_name)) {
+        counter += 1;
+      }
+    }
+    (void) closedir(dir);
+  } else {
+    printf("Error! No se ha podido abrir directorio\n");
+    exit(1);
+  }
+  return counter;
+
+}
+
+// Funcion para procesar un directorio contando sus archivos y bytes
+void processDirectory(char* path, char* outpufile, report report) {
+  printf("Soy %d y me toca %s\n", getpid(), path);
+  FILE *fp;
+  strcat(outpufile, "-");
+  strcat(outpufile, path);
+  printf("Soy %d, archivo de salida: %s\n", getpid(), outpufile);
+
+  struct dirent *ep;
+  DIR *dir;
+
+  dir = opendir(path);
+  if (dir) {
+
+    (void) closedir(dir);
+  } else {
+    printf("Error! No se ha podido abrir directorio\n");
+    exit(1);
+  }
+
+
+  if ((fp = fopen(outpufile,"w"))== NULL){
+    printf("Error! No se ha podido abrir archivo de salida\n");
+    exit(1);
+  }
+  // Escribir en archivo de salida fp
+  struct stat statBuffer;
+  stat(path, &statBuffer);
+  printPermissions(statBuffer, fp);
+  fclose(fp);
 }
