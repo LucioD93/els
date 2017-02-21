@@ -45,17 +45,35 @@ int main(int argc, char const *argv[]) {
 
   name = (char*)argv[1];
   FILE * fp;
-  if ((fp = fopen(name,"w"))== NULL){
+  if (!(fp = fopen(name,"w"))){
     printf("Error! No se ha podido abrir archivo de salida\n");
     exit(1);
   }
 
   pid_t childsPids[directorieCount];
+  char* outputfile = NULL;
+  FILE * fpp;
 
   for (int i = 0; i < directorieCount; i++) {
     if ((childsPids[i] = fork()) == 0) {
       printf("Hola soy %d hijo de %d\n", getpid(), getppid());
-      processDirectory(directories[i], name);
+      report r;
+      if (!(outputfile = (char*) malloc(sizeof(char)*(strlen(name)+strlen(directories[i]+1))))) {
+        printf("Error! no se ha podido reservar memoria\n");
+        exit(1);
+      }
+      strcpy(outputfile, name);
+      strcat(outputfile, "-");
+      strcat(outputfile, directories[i]);
+      printf("%d %s\n", getpid(), name);
+      printf("Abro |%s|%d\n", outputfile, getpid());
+      if ((fpp = fopen(outputfile,"w"))== NULL){
+        printf("Error! No se ha podido abrir archivo de salida\n");
+        exit(1);
+      }
+      processDirectory(directories[i], fpp, r);
+      fclose(fpp);
+      free(outputfile);
       exit(0);
     } else if (childsPids[i] < 0) {
       printf("Error! No se pudo crear proceso\n");

@@ -26,6 +26,6 @@ void addSlash(char *);
 void printPermissions(struct stat, FILE *);
 int isDirectory(char*);
 int countDirectories(char*);
-void processDirectory(char*, char*, report);
+void processDirectory(char*, FILE*, report);
 
 #endif
