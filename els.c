@@ -51,11 +51,12 @@ int main(int argc, char const *argv[]) {
   }
 
   pid_t childsPids[directorieCount];
-
-  for (int i = 0; i < directorieCount; i++) {
+  int i;
+  report * rep;
+  for (i = 0; i < directorieCount; i++) {
     if ((childsPids[i] = fork()) == 0) {
       printf("Hola soy %d hijo de %d\n", getpid(), getppid());
-      processDirectory(directories[i], name);
+      processDirectory(directories[i], name, rep);
       exit(0);
     } else if (childsPids[i] < 0) {
       printf("Error! No se pudo crear proceso\n");
@@ -63,7 +64,7 @@ int main(int argc, char const *argv[]) {
     }
   }
 
-  for (int i = 0; i < directorieCount; i++) {
+  for (i = 0; i < directorieCount; i++) {
     waitpid(childsPids[i], (int*)1, 0);
   }
 
@@ -77,7 +78,7 @@ int main(int argc, char const *argv[]) {
   }
   printPermissions(cwdStat,fp);
   fclose(fp);
-  for (int i = 0; i < directorieCount; i++) {
+  for (i = 0; i < directorieCount; i++) {
     free(directories[i]);
   }
 }

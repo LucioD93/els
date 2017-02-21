@@ -100,7 +100,7 @@ int countDirectories(char* path) {
 }
 
 // Funcion para procesar un directorio contando sus archivos y bytes
-void processDirectory(char* path, char* outpufile, report report) {
+void processDirectory(char* path, char* outpufile, report * rep) {
   printf("Soy %d y me toca %s\n", getpid(), path);
   FILE *fp;
   strcat(outpufile, "-");
@@ -129,4 +129,46 @@ void processDirectory(char* path, char* outpufile, report report) {
   stat(path, &statBuffer);
   printPermissions(statBuffer, fp);
   fclose(fp);
+}
+
+void strreverse(char* begin, char* end) {  
+    char aux;  
+    while(end>begin){
+        aux=*end, *end--=*begin, *begin++=aux; 
+    }
+}
+   
+char* itoa(int value, char* str) {
+    static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    char* wstr=str;
+    int sign;  
+    div_t res;
+    // Take care of sign
+   
+    if ((sign=value) < 0){
+      value = -value;
+    } 
+    // Conversion. Number is reversed.
+   
+    do {   
+        res = div(value,10); 
+        *wstr++ = num[res.rem];
+    }while(value=res.quot);
+   
+    if(sign<0) *wstr++='-';
+    *wstr='\0';
+    // Reverse string  
+    strreverse(str,wstr-1);
+        return str;
+}
+
+char * repString(report * rep){
+  char * fC;
+  char * bC;
+  fC = itoa(rep->fileCounter,fC);
+  bC = itoa(rep->byteCounter,bC);
+  strcat(fC," ");
+  strcat(fC,bC);
+  return fC;
+
 }
