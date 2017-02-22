@@ -52,11 +52,12 @@ int main(int argc, char const *argv[]) {
 
   pid_t childsPids[directorieCount];
   int i;
-  report * rep;
+  report rep;
   for (i = 0; i < directorieCount; i++) {
     if ((childsPids[i] = fork()) == 0) {
       printf("Hola soy %d hijo de %d\n", getpid(), getppid());
-      processDirectory(directories[i], name, rep);
+      processDirectory(directories[i], name, &rep);
+      printf("values: %s\n", repString(&rep));
       exit(0);
     } else if (childsPids[i] < 0) {
       printf("Error! No se pudo crear proceso\n");

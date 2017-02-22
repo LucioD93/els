@@ -131,40 +131,42 @@ void processDirectory(char* path, char* outpufile, report * rep) {
   fclose(fp);
 }
 
-void strreverse(char* begin, char* end) {  
-    char aux;  
+void strreverse(char* begin, char* end) {
+    char aux;
     while(end>begin){
-        aux=*end, *end--=*begin, *begin++=aux; 
+        aux=*end, *end--=*begin, *begin++=aux;
     }
 }
-   
+
 char* itoa(int value, char* str) {
     static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     char* wstr=str;
-    int sign;  
+    int sign;
     div_t res;
     // Take care of sign
-   
+
     if ((sign=value) < 0){
       value = -value;
-    } 
+    }
     // Conversion. Number is reversed.
-   
-    do {   
-        res = div(value,10); 
+
+    do {
+        res = div(value,10);
         *wstr++ = num[res.rem];
     }while(value=res.quot);
-   
+
     if(sign<0) *wstr++='-';
     *wstr='\0';
-    // Reverse string  
+    // Reverse string
     strreverse(str,wstr-1);
         return str;
 }
 
 char * repString(report * rep){
-  char * fC;
-  char * bC;
+  rep->fileCounter = 12;
+  rep->byteCounter = 256;
+  char * fC = (char*) malloc(32);
+  char * bC = (char*) malloc(32);
   fC = itoa(rep->fileCounter,fC);
   bC = itoa(rep->byteCounter,bC);
   strcat(fC," ");
