@@ -72,8 +72,7 @@ int isDirectory(char* path) {
   }
   struct stat statbuffer;
   if (stat(path, &statbuffer) != 0) {
-      printf("Error! No se ha podido aplicar stat a %s\n", path);
-      exit(1);
+      return 1;
   }
   return S_ISDIR(statbuffer.st_mode);
 }
@@ -109,10 +108,20 @@ void processDirectory(char* path, char* outpufile, report * rep) {
 
   struct dirent *ep;
   DIR *dir;
+  char* file;
 
   dir = opendir(path);
   if (dir) {
-
+    while ((ep = readdir(dir))) {
+      printf("encontre %s\n", ep->d_name);
+      if (isDirectory(ep->d_name) ){
+        printf("dir: %s-%s\n", path, ep->d_name);
+      } else if (ep->d_name[0] != '.') {
+        strcat(file, path);
+        printf("copie |%s|\n", file);
+        printf("file: %s-%s\n", path, ep->d_name);
+      }
+    }
     (void) closedir(dir);
   } else {
     printf("Error! No se ha podido abrir directorio\n");
@@ -153,7 +162,7 @@ char* itoa(int value, char* str) {
     do {
         res = div(value,10);
         *wstr++ = num[res.rem];
-    }while(value=res.quot);
+    }while((value=res.quot));
 
     if(sign<0) *wstr++='-';
     *wstr='\0';
