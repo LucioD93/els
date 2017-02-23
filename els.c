@@ -43,13 +43,13 @@ int main(int argc, char const *argv[]) {
   }
 
   name = (char*)argv[1];
-  char * pFile = (char*) malloc(strlen(name)+32);
-  strcpy(pFile,name);
-  strcat(pFile,"-");
+  //char * pFile = (char*) malloc(strlen(name)+32);
+  //strcpy(pFile,name);
+  //strcat(pFile,"-");
   /* AQUI DEBERIAS ASEGURARTE DE QUE SE PONGA EL DIRECTORIO ACTUAL AL NOMBRE DEL ARCHIVO PADRE*/
-  strcat(pFile,currentDir(cwd));
+  //strcat(pFile,currentDir(cwd));
   FILE * fp;
-  if ((fp = fopen(pFile,"w"))== NULL){
+  if ((fp = fopen(name,"w"))== NULL){
     printf("Error! No se ha podido abrir archivo de salida\n");
     exit(1);
   }
