@@ -20,7 +20,6 @@ int main(int argc, char const *argv[]) {
   addSlash(cwd);
 
   int directorieCount = countDirectories(cwd);
-  printf("Numero de directorios %d\n", directorieCount);
   char* directories[directorieCount];
   int counter = 0;
   DIR *dir;
@@ -73,7 +72,6 @@ int main(int argc, char const *argv[]) {
       //Child process closes up input side of pipe
       close(fd_array[i][0]);
 
-      printf("Hola soy %d hijo de %d\n", getpid(), getppid());
       processDirectory(directories[i], name, &rep);
 //      printf("values: %s\n", repString(&rep));
       char* rtn = repString(&rep);
@@ -87,7 +85,7 @@ int main(int argc, char const *argv[]) {
       close(fd_array[i][1]);
 
       nbytes = read(fd_array[i][0], readbuffer, sizeof(readbuffer));
-      printf("Probando %s\n", readbuffer);
+      // printf("Probando %s\n", readbuffer);
     }
   }
 

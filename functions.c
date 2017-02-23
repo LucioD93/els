@@ -72,7 +72,7 @@ int isDirectory(char* path) {
   }
   struct stat statbuffer;
   if (stat(path, &statbuffer) != 0) {
-      return 1;
+      return 0;
   }
   return S_ISDIR(statbuffer.st_mode);
 }
@@ -100,26 +100,37 @@ int countDirectories(char* path) {
 
 // Funcion para procesar un directorio contando sus archivos y bytes
 void processDirectory(char* path, char* outpufile, report * rep) {
-  printf("Soy %d y me toca %s\n", getpid(), path);
   FILE *fp;
   strcat(outpufile, "-");
   strcat(outpufile, path);
-  printf("Soy %d, archivo de salida: %s\n", getpid(), outpufile);
 
   struct dirent *ep;
   DIR *dir;
   char* file;
+  // file[0] ='\0';
 
   dir = opendir(path);
   if (dir) {
     while ((ep = readdir(dir))) {
-      printf("encontre %s\n", ep->d_name);
-      if (isDirectory(ep->d_name) ){
-        printf("dir: %s-%s\n", path, ep->d_name);
-      } else if (ep->d_name[0] != '.') {
-        strcat(file, path);
-        printf("copie |%s|\n", file);
-        printf("file: %s-%s\n", path, ep->d_name);
+      // filtrar directorios ocultos
+      if (ep->d_name[0] != '.') {
+        file = (char*) malloc(sizeof(char)*(int)strlen(path));
+        if (!file) {
+          printf("Error! No se pudo reservar memoria\n");
+          exit(1);
+        }
+        strcpy(file,path);
+        strcat(file, "/");
+        strcat(file, ep->d_name);
+        if (isDirectory(file) ){
+          // Se encontro un directorio
+          printf("dir: |%s| |%s|\n", path, file);
+          // processDirectory(file)
+
+        } else if (file[0] != '.') {
+          // Se encontro un archivo
+            printf("file: |%s| |%s|\n", path, ep->d_name);
+        }
       }
     }
     (void) closedir(dir);
@@ -127,7 +138,6 @@ void processDirectory(char* path, char* outpufile, report * rep) {
     printf("Error! No se ha podido abrir directorio\n");
     exit(1);
   }
-
 
   if ((fp = fopen(outpufile,"w"))== NULL){
     printf("Error! No se ha podido abrir archivo de salida\n");
