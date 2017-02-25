@@ -6,7 +6,8 @@ int main(int argc, char const *argv[]) {
   // Se previene la interrupcion CTRL+C
   signal(SIGINT, sigintHandler);
 
-  char * name;
+  char * name = (char*) malloc(sizeof(char)*5);
+  strcpy(name,"/tmp/");
   int mainPid = getpid();
 
   char *cp;
@@ -50,7 +51,8 @@ int main(int argc, char const *argv[]) {
     exit(1);
   }
 
-  name = (char*)argv[1];
+  //name = (char*)argv[1];
+  strcat(name,argv[1]);
   FILE * fp;
   if ((fp = fopen(name,"w"))== NULL) {
     printf("Error! No se ha podido abrir archivo de salida\n");
@@ -75,7 +77,6 @@ int main(int argc, char const *argv[]) {
   for (i = 0; i < directorieCount; i++) {
     if ((childsPids[i] = fork()) == 0) {
       //Child process closes up input side of pipe
-      // printf("Hola soy %d hijo de %d\n", getpid(), getppid());
       close(fd_array[i][0]);
       if (!(outputfile = (char*) malloc(sizeof(char)*(strlen(name)+strlen(directories[i]+1))))) {
         printf("Error! no se ha podido reservar memoria\n");
@@ -84,14 +85,13 @@ int main(int argc, char const *argv[]) {
       strcpy(outputfile, name);
       strcat(outputfile, "-");
       strcat(outputfile, directories[i]);
-      // printf("Archivo salida |%d| |%s|\n", getpid(), outputfile);
+      //printf("Archivo salida |%d| |%s|\n", getpid(), outputfile);
       if ((fpp = fopen(outputfile,"w"))== NULL){
         printf("Error! No se ha podido abrir archivo de salida\n");
         exit(1);
       }
       processDirectory(directories[i], fpp, &rep);
       fclose(fpp);
-      // free(outputfile);
 //      printf("values: %s\n", repString(&rep));
       char* rtn = repString(&rep);
       printf("      %s->%s\n", outputfile, rtn);
@@ -120,7 +120,7 @@ int main(int argc, char const *argv[]) {
     finalRep.fileCounter += rep_array[i].fileCounter;
     finalRep.byteCounter += rep_array[i].byteCounter;
   }
-  
+
   // fprintf(fp,"CWD: %s\n", cwd);
   // fprintf(fp,"Pid: %d\n", mainPid);
   struct stat cwdStat;
