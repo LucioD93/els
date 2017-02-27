@@ -85,16 +85,14 @@ int main(int argc, char const *argv[]) {
       strcpy(outputfile, name);
       strcat(outputfile, "-");
       strcat(outputfile, directories[i]);
-      //printf("Archivo salida |%d| |%s|\n", getpid(), outputfile);
       if ((fpp = fopen(outputfile,"w"))== NULL){
         printf("Error! No se ha podido abrir archivo de salida\n");
         exit(1);
       }
       processDirectory(directories[i], fpp, &rep);
       fclose(fpp);
-//      printf("values: %s\n", repString(&rep));
       char* rtn = repString(&rep);
-      printf("      %s->%s\n", outputfile, rtn);
+      // printf("      %s->%s\n", outputfile, rtn);
       write(fd_array[i][1], rtn, (strlen(rtn)+1));
       exit(0);
     } else if (childsPids[i] < 0) {
@@ -121,8 +119,6 @@ int main(int argc, char const *argv[]) {
     finalRep.byteCounter += rep_array[i].byteCounter;
   }
 
-  // fprintf(fp,"CWD: %s\n", cwd);
-  // fprintf(fp,"Pid: %d\n", mainPid);
   struct stat cwdStat;
 
   if(stat(cwd, &cwdStat)) {
@@ -149,6 +145,7 @@ int main(int argc, char const *argv[]) {
   }
 
   fclose(fp);
+  free(name);
   for (i = 0; i < directorieCount; i++) {
     free(directories[i]);
     free(fullpathD[i]);

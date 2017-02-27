@@ -50,8 +50,8 @@ void printPermissions(struct stat fileStat, FILE * fp) {
     } else {
       fprintf(fp," %-8d", fileStat.st_gid);
     }
-    // fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
-    // fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
+    fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_mtim));
+    fprintf(fp,"%s", ctime((const time_t *)&fileStat.st_atim));
 }
 
 // Funcion para determinar si un path es un directorio,
@@ -85,15 +85,13 @@ int countDirectories(char* path) {
     exit(1);
   }
   return counter;
-
 }
 
 // Funcion para procesar un directorio contando sus archivos y bytes
 void processDirectory(char* path, FILE* fp, report * rep) {
-  printf("Recibo |%s|\n", path);
   struct dirent *ep;
   DIR *dir;
-  char* file;
+  char file[BUFSIZ];
   int byteCounter = 0;
   int fileCounter = 0;
   if (!(dir = opendir(path))) {
@@ -105,21 +103,13 @@ void processDirectory(char* path, FILE* fp, report * rep) {
       // filtrar directorios ocultos
       if (ep->d_name[0] != '.') {
         fileCounter++;
-        file = (char*) malloc(sizeof(char)*(int)strlen(path));
-        if (!file) {
-          printf("Error! No se pudo reservar memoria\n");
-          exit(1);
-        }
-        strcpy(file,path);
-        strcat(file, "/");
-        strcat(file, ep->d_name);
+        int len = snprintf(file, BUFSIZ, "%s/%s", path,ep->d_name);
+        file[len] = 0;
         if (isDirectory(file) ){
           // Se encontro un directorio
-          printf("dir: |%s|->|%s|\n", path, file);
           processDirectory(file, fp, rep);
         } else if (file[0] != '.') {
           // Se encontro un archivo
-            printf("file: |%s|->|%s|\n", path, file);
             struct stat statBuffer;
             stat(file, &statBuffer);
             byteCounter += (int)statBuffer.st_size;
@@ -129,11 +119,9 @@ void processDirectory(char* path, FILE* fp, report * rep) {
     (void) closedir(dir);
   } else {
     printf("Error! No se ha podido abrir directorio\n");
-    exit(1);
+    return;
   }
 
-  printf("permisos de: |%s|\n", path);
-  printf("---->|%s| archivos:%d bytes %d\n", path, fileCounter, byteCounter);
   struct stat statB;
   stat(path, &statB);
   fprintf(fp, "%s ", path);
@@ -143,6 +131,7 @@ void processDirectory(char* path, FILE* fp, report * rep) {
   rep -> byteCounter += byteCounter;
 }
 
+// Funcion para voltear un string
 void strreverse(char* begin, char* end) {
     char aux;
     while(end>begin){
@@ -150,6 +139,7 @@ void strreverse(char* begin, char* end) {
     }
 }
 
+// Funcion para pasar de un entero a un string
 char* itoa(int value, char* str) {
     static char num[] = "0123456789abcdefghijklmnopqrstuvwxyz";
     char* wstr=str;
@@ -174,6 +164,7 @@ char* itoa(int value, char* str) {
         return str;
 }
 
+// Funcion para convertir una estructura reporte a un string
 char * repString(report * rep){
   char * fC = (char*) malloc(32);
   char * bC = (char*) malloc(32);
@@ -185,6 +176,7 @@ char * repString(report * rep){
 
 }
 
+// Funcion para pasar de un string a una estructura reporte
 report repValues(char * rep){
   report arr;
   int i = 0;
@@ -206,6 +198,7 @@ report repValues(char * rep){
   return arr;
 }
 
+// Funcion para saber si un archivo es core
 int isCore(const char * name){
   const char * core = "core";
   return strncmp(name, core, 4);
